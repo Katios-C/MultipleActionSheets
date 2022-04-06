@@ -1,21 +1,56 @@
-//
-//  ContentView.swift
-//  MultipleActionSheets
-//
-//  Created by Екатерина Чернова on 06.04.2022.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+
+    enum Sheets: Identifiable {
+        case settings, add
+
+        var id: Int {
+            self.hashValue
+        }
+    }
+
+    @State var activeSheet: Sheets?
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+
+        NavigationView {
+            VStack {
+                Text("Hello Toolbar")
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        self.activeSheet = .settings
+                    }) {
+                        Image(systemName: "gear")
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        self.activeSheet = .add
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(item: $activeSheet, onDismiss: { activeSheet = nil }) { item in
+                switch item {
+                case .settings:
+                    SettingsView()
+                case .add:
+                    AddView()
+                }
+            }
+
+        }
+        
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct Previews_ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
     }
 }
